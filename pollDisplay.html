@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BTS ARIRANG Album Rankings</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #dc143c 0%, #ff6b6b 50%, #ff8787 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        header h1 {
+            font-size: 48px;
+            margin-bottom: 10px;
+            color: white;
+        }
+
+        .rankings {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .song-card {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(255, 20, 147, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: all 0.3s ease;
+        }
+
+        .song-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 25px rgba(255, 20, 147, 0.25);
+        }
+
+        .rank-badge {
+            background: linear-gradient(135deg, #dc143c, #b91c1c);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 24px;
+            margin-right: 20px;
+        }
+
+        .song-info {
+            flex: 1;
+        }
+
+        .song-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #dc143c;
+            margin-bottom: 5px;
+        }
+
+        .song-artist {
+            color: #888;
+            font-size: 14px;
+        }
+
+        .votes-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .vote-bar {
+            background: #ffe0e0;
+            height: 8px;
+            border-radius: 5px;
+            overflow: hidden;
+            width: 150px;
+        }
+
+        .vote-fill {
+            background: linear-gradient(90deg, #dc143c, #b91c1c);
+            height: 100%;
+            border-radius: 5px;
+        }
+
+        .vote-count {
+            color: #dc143c;
+            font-weight: bold;
+            font-size: 16px;
+            min-width: 50px;
+            text-align: right;
+        }
+
+        .vote-button {
+            background: #dc143c;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            margin-left: 10px;
+        }
+
+        .vote-button:hover {
+            background: #b91c1c;
+            transform: scale(1.05);
+        }
+
+        .vote-button:active {
+            transform: scale(0.95);
+        }
+
+        .top-three {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .podium {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 8px 20px rgba(220, 20, 60, 0.15);
+            border: 3px solid #dc143c;
+        }
+
+        .podium-rank {
+            font-size: 32px;
+            font-weight: bold;
+            color: #dc143c;
+            margin-bottom: 10px;
+        }
+
+        .podium-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #dc143c;
+        }
+
+        .comments-section {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 2px solid #ffe0e0;
+        }
+
+        .comments-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: #dc143c;
+            margin-bottom: 15px;
+        }
+
+        .comment-input-container {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .comment-input {
+            flex: 1;
+            padding: 10px;
+            border: 2px solid #ffe0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: inherit;
+            transition: border-color 0.3s ease;
+        }
+
+        .comment-input:focus {
+            outline: none;
+            border-color: #dc143c;
+        }
+
+        .comment-submit {
+            background: #dc143c;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .comment-submit:hover {
+            background: #b91c1c;
+            transform: scale(1.05);
+        }
+
+        .comments-list {
+            max-height: 300px;
+            overflow-y: auto;
+            background: #fff5f5;
+            padding: 15px;
+            border-radius: 8px;
+            border: 2px solid #ffe0e0;
+        }
+
+        .comment {
+            background: white;
+            padding: 12px;
+            margin-bottom: 10px;
+            border-radius: 6px;
+            border-left: 4px solid #dc143c;
+            font-size: 14px;
+        }
+
+        .comment-author {
+            font-weight: bold;
+            color: #dc143c;
+            margin-bottom: 5px;
+        }
+
+        .comment-text {
+            color: #333;
+            line-height: 1.4;
+        }
+
+        .no-comments {
+            color: #ccc;
+            text-align: center;
+            padding: 20px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎤 BTS ARIRANG 🎤</h1>
+            <p>Album Song Rankings</p>
+        </header>
+
+        <div id="rankings" class="rankings"></div>
+    </div>
+
+    <script>
+        const songs = [
+            { id: 1, title: "Arirang", artist: "BTS", votes: 1250 },
+            { id: 2, title: "Dynamite Korean Ver.", artist: "BTS", votes: 980 },
+            { id: 3, title: "Butterfly", artist: "BTS", votes: 856 },
+            { id: 4, title: "Spring Day", artist: "BTS", votes: 742 },
+            { id: 5, title: "Blood Sweat & Tears", artist: "BTS", votes: 698 },
+            { id: 6, title: "Mikrokosmos", artist: "BTS", votes: 604 },
+            { id: 7, title: "Epiphany", artist: "Jin", votes: 523 },
+            { id: 8, title: "Singularity", artist: "Taehyung", votes: 487 }
+        ];
+
+        // Sort songs by votes in descending order
+        songs.sort((a, b) => b.votes - a.votes);
+
+        // Calculate max votes for progress bar
+        const maxVotes = Math.max(...songs.map(s => s.votes));
+
+        function renderRankings() {
+            const rankingsDiv = document.getElementById('rankings');
+            rankingsDiv.innerHTML = '';
+
+            songs.forEach((song, index) => {
+                const percentage = (song.votes / maxVotes) * 100;
+                const card = document.createElement('div');
+                card.className = 'song-card';
+                card.innerHTML = `
+                    <div class="rank-badge">#${index + 1}</div>
+                    <div class="song-info">
+                        <div class="song-title">${song.title}</div>
+                        <div class="song-artist">by ${song.artist}</div>
+                    </div>
+                    <div class="votes-container">
+                        <div class="vote-bar">
+                            <div class="vote-fill" style="width: ${percentage}%"></div>
+                        </div>
+                        <div class="vote-count">${song.votes}</div>
+                        <button class="vote-button" onclick="voteForSong(${song.id})">👍 Vote</button>
+                    </div>
+                `;
+                rankingsDiv.appendChild(card);
+            });
+        }
+
+        function voteForSong(songId) {
+            const song = songs.find(s => s.id === songId);
+            if (song) {
+                song.votes++;
+                songs.sort((a, b) => b.votes - a.votes);
+                renderRankings();
+            }
+        }
+
+        // Initial render
+        renderRankings();
+    </script>
+</body>
+</html>
